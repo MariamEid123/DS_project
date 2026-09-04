@@ -149,7 +149,21 @@ public:
     //          (doesn't need to be a complete word)
     bool startsWith(string prefix) {
         // TODO: Implement this function
-        return false; // placeholder
+       TrieNode* curr = root;
+
+       for(char ch : prefix)
+       {
+           int index = ch - 'a';
+
+           if(index < 0 || index >= 26)
+             return false;
+
+           if(curr->children[index] == nullptr)
+                return false;
+
+           curr = curr->children[index];
+       }
+        return true; // placeholder
     }
 
     // Get all words that start with the given prefix
