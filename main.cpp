@@ -81,9 +81,24 @@ private:
     // Output: number of complete words below this node
     // Purpose: Count all words starting from this node
     int countWordsFromNode(TrieNode* node) {
-        // TODO: Implement this function
+    if (node == nullptr) {
         return 0;
     }
+
+    int count = 0;
+
+    if (node->isEndOfWord) {
+        count++;
+    }
+
+    for (int i = 0; i < 26; i++) {
+        if (node->children[i] != nullptr) {
+            count += countWordsFromNode(node->children[i]);
+        }
+    }
+
+    return count;
+}
 
     // Helper function to remove a word recursively
     // Input:
@@ -195,31 +210,46 @@ public:
     // Input: none
     // Output: number of words
     // Purpose: Return how many unique complete words exist in the Trie
+
     int countWords() {
-        // TODO: Implement this function
-        return 0;
-    }
+    return wordCount;
+}
 
     // Count how many words start with a given prefix
     // Input: prefix
     // Output: number of words
     // Purpose: Count all complete words that begin with the prefix
     int countWordsWithPrefix(string prefix) {
-        // TODO: Implement this function
-        return 0;
+    TrieNode* curr = root;
+
+    for (char ch : prefix) {
+        int index = ch - 'a';
+
+        if (index < 0 || index >= 26) {
+            return 0;
+        }
+
+        if (curr->children[index] == nullptr) {
+            return 0;
+        }
+
+        curr = curr->children[index];
     }
+
+    return countWordsFromNode(curr);
+}
 
     // Get all words stored in the Trie
     // Input: none
     // Output: vector containing all words
     // Purpose: Return every complete word stored in the Trie
     vector<string> getAllWords() {
-        vector<string> words;
+    vector<string> words;
 
-        // TODO: Implement this function
+    findAllWords(root, "", words);
 
-        return words;
-    }
+    return words;
+}
 
     // Find the longest prefix of a given word that exists in the Trie
     // Input: word
@@ -242,9 +272,8 @@ public:
     // Output: true if empty, false otherwise
     // Purpose: Check if the Trie has no stored words
     bool isEmpty() {
-        // TODO: Implement this function
-        return true; // placeholder
-    }
+    return wordCount == 0;
+}
 
     // Remove all words from the Trie
     // Input: none
